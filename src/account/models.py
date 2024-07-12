@@ -7,7 +7,14 @@ from django.conf import settings
 
 
 class CustomUser(AbstractUser):
+    CHOICES = (
+        ('Student', 'Student'),
+        ('Organizer', 'Organizer'),
+    )
+
+
     username = None
+    type = models.CharField(max_length=20, choices=CHOICES)
     email = models.EmailField(_("Email address"), unique=True)
 
     USERNAME_FIELD = "email"
@@ -21,17 +28,11 @@ class CustomUser(AbstractUser):
 
 # Profile Model
 class Profile(models.Model):
-    CHOICES = (
-        ('Male', 'Male'),
-        ('Female', 'Female'),
-        ('Other', 'Other')
-    )
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='profile'
     )
-    # sex = models.CharField(max_length=20, choices=CHOICES, null=True, blank=True, default='Male')
     name = models.CharField(max_length=255, null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     is_verified = models.BooleanField(default=False)
